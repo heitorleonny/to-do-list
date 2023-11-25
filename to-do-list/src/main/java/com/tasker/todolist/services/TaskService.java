@@ -1,5 +1,6 @@
 package com.tasker.todolist.services;
 
+import com.tasker.todolist.exceptions.ResourceNotFoundException;
 import com.tasker.todolist.models.Task;
 import com.tasker.todolist.repositories.TaskRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,7 +29,8 @@ public class TaskService {
 
     public Task findById(Long id) {
         logger.info("Findind one task");
-        return taskRepository.findById(id) .orElseThrow(() -> new RuntimeException("ERROR"));
+        return taskRepository.findById(id) .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
+
     }
 
     public List<Task> fidAll(){
@@ -38,7 +40,7 @@ public class TaskService {
 
     public Task update(Task task){
         logger.info("Updating one task");
-        var entity = taskRepository.findById(task.getId()) . orElseThrow(() -> new RuntimeException("Id no records"));
+        var entity = taskRepository.findById(task.getId()) . orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
         task.setName(task.getName());
         task.setDiscription(task.getDiscription());
         return taskRepository.save(task);
@@ -47,7 +49,7 @@ public class TaskService {
 
     public void delete(Long id){
         logger.info("Deleting one task");
-        var entity = taskRepository.findById(id) .orElseThrow(() -> new RuntimeException());
+        var entity = taskRepository.findById(id) .orElseThrow(() -> new ResourceNotFoundException("No records found for this ID!"));
         taskRepository.delete(entity);
     }
 }
